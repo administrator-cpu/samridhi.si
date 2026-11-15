@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/* DIV brand guide tokens */
+@theme {
+  --color-plum: #2b1b30;
+  --color-plum-2: #45334c;
+  --color-plum-line: #45334c;
+  --color-body: #52465a;
+  --color-muted: #766c7c;
+  --color-faint: #a9a1ae;
+  --color-line: #e5e0e6;
+  --color-tint: #f0ecf1;
+  --color-mist: #ede8ee;
+  --color-canvas: #f6f3f5;
+  --color-magenta: #ff0091;
+  --color-amber: #ffac00;
+  --color-amber-soft: #ffe3a8;
+  --color-accent: #d6007a;
+  --color-critical: #dc2626;
+
+  --font-sans: "Plus Jakarta Sans Variable", "Mukta", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --radius-control: 12px;
+  --radius-card: 16px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 88px;
+  }
+  body {
+    @apply bg-canvas text-body font-sans antialiased;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  a {
+    @apply text-plum;
+  }
+  ::selection {
+    @apply bg-amber text-plum;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-amber);
+    outline-offset: 2px;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@utility brand-gradient {
+  background-image: linear-gradient(90deg, var(--color-magenta), var(--color-amber));
+}
+
+@utility h-display {
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  color: var(--color-plum);
+  text-wrap: balance;
+}
+
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@utility gutter {
+  padding-inline: clamp(20px, 5vw, 40px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
