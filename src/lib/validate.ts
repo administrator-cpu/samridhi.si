@@ -35,7 +35,7 @@ export function validateRegistration(body: unknown): ValidationResult {
   const b = (body && typeof body === 'object' ? body : {}) as Record<string, unknown>;
   const errors: Partial<Record<keyof Registration, string>> = {};
 
-  const role = (clean(b.role, 40) || 'Join a class') as Role;
+  const role = (clean(b.role, 40) || roles[0]) as Role;
   if (!roles.includes(role)) errors.role = 'Unknown option.';
 
   const name = clean(b.name, 100);

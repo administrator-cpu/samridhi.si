@@ -5,6 +5,10 @@ import type { Role } from '@/content/site';
 export type RolePick = { role?: Role; programme?: string };
 export const ROLE_EVENT = 'samridhi:pick';
 
+/** Hero cards and the programme carousel share one "current programme" through this event. */
+export const SLIDE_EVENT = 'samridhi:slide';
+export const pickSlide = (index: number) => window.dispatchEvent(new CustomEvent<number>(SLIDE_EVENT, { detail: index }));
+
 /** A link to the form that also preselects a role and/or programme. */
 export function RoleLink({ pick, className, children }: { pick: RolePick; className?: string; children: React.ReactNode }) {
   return (

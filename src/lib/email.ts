@@ -20,7 +20,7 @@ export function buildRegistrationEmail(reg: Registration, submittedAt = new Date
 
   const subject = `New Samridhi registration: ${reg.name} (${reg.role})`;
 
-  const text = `New registration from samridhi.si\n\n${rows.map(([k, v]) => `${k}: ${v}`).join('\n')}\n\nPlease call back within 2 working days.\n`;
+  const text = `New registration from samridhi.si\n\n${rows.map(([k, v]) => `${k}: ${v}`).join('\n')}\n\nPlease get in touch when a programme opens near them.\n`;
 
   const html = `<!doctype html>
 <html><body style="margin:0;background:#F6F3F5;font-family:Arial,Helvetica,sans-serif;color:#2B1B30">
@@ -41,7 +41,7 @@ ${rows
   )
   .join('\n')}
 </table></td></tr>
-<tr><td style="padding:16px 28px 28px;font-size:14px;color:#52465A">Please call back within 2 working days.</td></tr>
+<tr><td style="padding:16px 28px 28px;font-size:14px;color:#52465A">Please get in touch when a programme opens near them.</td></tr>
 </table>
 <div style="padding:16px;font-size:12px;color:#766C7C">Sent automatically from the registration form on samridhi.si</div>
 </td></tr></table>

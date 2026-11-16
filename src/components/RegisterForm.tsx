@@ -7,14 +7,12 @@ import { ROLE_EVENT, type RolePick } from './RoleLink';
 type Form = { name: string; phone: string; village: string; district: string; programme: string; website: string };
 const EMPTY: Form = { name: '', phone: '', village: '', district: '', programme: '', website: '' };
 
-const submitLabel = (r: Role) =>
-  r === 'Join a class' ? 'Register for a free class' : r === 'Volunteer' ? 'Sign up to volunteer' : 'Send partner enquiry';
 
 const input =
-  'min-h-[50px] rounded-control border-[1.5px] bg-white px-3.5 font-normal text-plum outline-none focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-amber';
+  'min-h-[50px] rounded-control border bg-[#faf8f9] px-3.5 text-base font-normal text-plum outline-none focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-accent';
 
 export function RegisterForm() {
-  const [role, setRole] = useState<Role>('Join a class');
+  const [role, setRole] = useState<Role>(roles[0]);
   const [form, setForm] = useState<Form>(EMPTY);
   const [tried, setTried] = useState(false);
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
@@ -91,22 +89,22 @@ export function RegisterForm() {
   if (status === 'done') {
     return (
       <div ref={doneRef} tabIndex={-1} role="status" className="flex flex-col gap-3.5 outline-none">
-        <span className="label-mono text-body">Received</span>
-        <h3 className="h-display text-[clamp(30px,4vw,36px)] leading-[1.15]">Thank you, {form.name.trim()}.</h3>
+        <span className="self-start rounded-full bg-green/10 px-3 py-1.5 text-xs font-semibold text-green">You&apos;re on the list</span>
+        <h3 className="m-0 text-[clamp(28px,3.4vw,36px)] leading-[1.15] font-bold tracking-[-0.03em] text-plum">Thank you, {form.name.trim()}.</h3>
         <p>
-          We&apos;ll call <span className="whitespace-nowrap tabular-nums">{phonePretty}</span> within 2 working days to find a batch and time that suit you.
+          We&apos;ll get in touch on <span className="whitespace-nowrap tabular-nums">{phonePretty}</span> as soon as Samridhi opens near you.
         </p>
-        <button type="button" onClick={reset} className="-my-3 self-start py-3 font-semibold text-plum underline underline-offset-[5px]">
-          Register someone else
+        <button type="button" onClick={reset} className="-my-3 self-start py-3 font-semibold text-green underline underline-offset-[5px]">
+          Add someone else
         </button>
       </div>
     );
   }
 
   return (
-    <form onSubmit={submit} noValidate className="relative flex flex-col gap-[22px]">
+    <form onSubmit={submit} noValidate className="relative flex flex-col gap-5">
       <fieldset className="flex flex-col gap-2.5">
-        <legend className="mb-2.5 font-semibold text-plum">I want to</legend>
+        <legend className="mb-2.5 text-sm font-bold text-plum">I&apos;d like to</legend>
         <div className="flex flex-wrap gap-2">
           {roles.map(r => (
             <button
@@ -114,8 +112,8 @@ export function RegisterForm() {
               type="button"
               onClick={() => setRole(r)}
               aria-pressed={r === role}
-              className={`min-h-11 rounded-control border-[1.5px] border-plum px-[18px] text-base font-semibold transition-colors ${
-                r === role ? 'bg-plum text-canvas' : 'bg-transparent text-plum hover:bg-tint'
+              className={`min-h-11 rounded-full border-[1.5px] px-4 text-sm font-semibold transition-colors ${
+                r === role ? 'border-green bg-green text-white' : 'border-line bg-white text-plum hover:border-green/50'
               }`}
             >
               {r}
@@ -124,8 +122,9 @@ export function RegisterForm() {
         </div>
       </fieldset>
 
-      <label className="flex flex-col gap-1.5 font-semibold text-plum">
-        Your name
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3.5">
+      <label className="flex flex-col gap-1.5 text-sm font-bold text-plum">
+        Full name
         <input
           ref={nameRef}
           type="text"
@@ -134,7 +133,7 @@ export function RegisterForm() {
           onChange={set('name')}
           aria-invalid={!!nameErr}
           aria-describedby={nameErr ? 'name-err' : undefined}
-          className={`${input} ${nameErr ? 'border-critical' : 'border-faint'}`}
+          className={`${input} ${nameErr ? 'border-critical' : 'border-line'}`}
         />
         {nameErr && (
           <span id="name-err" className="text-[15px] font-normal text-critical">
@@ -143,9 +142,9 @@ export function RegisterForm() {
         )}
       </label>
 
-      <label className="flex flex-col gap-1.5 font-semibold text-plum">
+      <label className="flex flex-col gap-1.5 text-sm font-bold text-plum">
         <span>
-          Mobile number <span className="text-[15px] font-normal text-muted">10 digits, no +91</span>
+          Mobile number <span className="font-normal text-muted">10 digits</span>
         </span>
         <input
           type="tel"
@@ -156,7 +155,7 @@ export function RegisterForm() {
           onChange={set('phone')}
           aria-invalid={!!phoneErr}
           aria-describedby={phoneErr ? 'phone-err' : undefined}
-          className={`${input} font-mono tabular-nums ${phoneErr ? 'border-critical' : 'border-faint'}`}
+          className={`${input} font-mono tabular-nums ${phoneErr ? 'border-critical' : 'border-line'}`}
         />
         {phoneErr && (
           <span id="phone-err" className="text-[15px] font-normal text-critical">
@@ -164,23 +163,24 @@ export function RegisterForm() {
           </span>
         )}
       </label>
+      </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-[22px]">
-        <label className="flex flex-col gap-1.5 font-semibold text-plum">
-          Village or town
-          <input type="text" autoComplete="address-level3" value={form.village} onChange={set('village')} className={`${input} border-faint`} />
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3.5">
+        <label className="flex flex-col gap-1.5 text-sm font-bold text-plum">
+          Town or village
+          <input type="text" autoComplete="address-level3" value={form.village} onChange={set('village')} className={`${input} border-line`} />
         </label>
-        <label className="flex flex-col gap-1.5 font-semibold text-plum">
+        <label className="flex flex-col gap-1.5 text-sm font-bold text-plum">
           District
-          <input type="text" autoComplete="address-level2" value={form.district} onChange={set('district')} className={`${input} border-faint`} />
+          <input type="text" autoComplete="address-level2" value={form.district} onChange={set('district')} className={`${input} border-line`} />
         </label>
       </div>
 
-      <label className="flex flex-col gap-1.5 font-semibold text-plum">
+      <label className="flex flex-col gap-1.5 text-sm font-bold text-plum">
         <span>
-          Programme <span className="text-[15px] font-normal text-muted">optional</span>
+          Programme <span className="font-normal text-muted">optional</span>
         </span>
-        <select value={form.programme} onChange={set('programme')} className={`${input} border-faint px-3`}>
+        <select value={form.programme} onChange={set('programme')} className={`${input} border-line px-3`}>
           <option value="">Not sure yet</option>
           {programmes.map(p => (
             <option key={p.name} value={p.name}>
@@ -207,11 +207,11 @@ export function RegisterForm() {
       <button
         type="submit"
         disabled={status === 'sending'}
-        className="min-h-[54px] self-start rounded-control bg-plum px-[30px] text-lg font-semibold whitespace-nowrap text-white transition-colors hover:bg-plum-2 disabled:opacity-70"
+        className="min-h-[54px] rounded-full bg-green px-[30px] text-base font-bold text-white transition-colors hover:bg-green-deep disabled:opacity-70"
       >
-        {status === 'sending' ? 'Sending…' : status === 'error' ? 'Try again' : submitLabel(role)}
+        {status === 'sending' ? 'Sending…' : status === 'error' ? 'Try again' : 'Notify me'}
       </button>
-      <p className="m-0 text-[15px] text-muted">We only use your number to contact you about Samridhi.</p>
+      <p className="m-0 text-[13px] text-body">We use these details only to tell you about Samridhi. No spam, ever.</p>
     </form>
   );
 }
