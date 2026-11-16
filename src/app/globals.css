@@ -15,7 +15,14 @@
   --color-magenta: #ff0091;
   --color-amber: #ffac00;
   --color-amber-soft: #ffe3a8;
-  --color-accent: #d6007a;
+  --color-accent: #e6007e;
+  --color-magenta-deep: #e6007e;
+  --color-rani-tint: #fce7f0;
+  --color-green: #15803d;
+  --color-green-deep: #0f5e2c;
+  --color-green-mid: #138036;
+  --color-cream: #fdf2e1;
+  --color-cream-line: #efe6d8;
   --color-critical: #dc2626;
 
   --font-sans: "Plus Jakarta Sans Variable", "Mukta", system-ui, sans-serif;
@@ -28,21 +35,23 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 88px;
+    scroll-padding-top: 80px;
   }
   body {
-    @apply bg-canvas text-body font-sans antialiased;
-    font-size: 18px;
+    @apply bg-white text-plum font-sans antialiased;
+    font-size: 16px;
     line-height: 1.6;
   }
   a {
-    @apply text-plum;
+    @apply text-green;
   }
   ::selection {
     @apply bg-amber text-plum;
   }
+  /* Accent, not amber: amber on canvas is under 2:1 and fails WCAG 1.4.11.
+     Accent clears 3:1 on canvas, white and plum. */
   :focus-visible {
-    outline: 3px solid var(--color-amber);
+    outline: 3px solid var(--color-accent);
     outline-offset: 2px;
   }
   summary::-webkit-details-marker {
@@ -83,4 +92,13 @@
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Hero texture: soft cream ripples spreading from behind the Wi-Fi image, fading to white. */
+@utility hero-ripples {
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(circle at 76% 62%, rgb(255 255 255 / 0) 0%, rgb(255 255 255 / 0) 16%, rgb(255 255 255 / 0.85) 48%, #ffffff 70%),
+    repeating-radial-gradient(circle at 76% 62%, rgb(245 214 168 / 0) 0px, rgb(245 214 168 / 0.32) 10px, rgb(245 214 168 / 0.1) 22px, rgb(245 214 168 / 0) 36px, rgb(245 214 168 / 0) 64px),
+    repeating-radial-gradient(circle at 94% 18%, rgb(245 214 168 / 0) 0px, rgb(245 214 168 / 0.16) 12px, rgb(245 214 168 / 0) 30px, rgb(245 214 168 / 0) 70px);
 }

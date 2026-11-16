@@ -28,6 +28,7 @@ Requires Node 20+. Fonts are self-hosted from npm (`@fontsource`), so nothing lo
    - Indexes are created automatically on the first submission.
 3. **Hosting:**
    - Run `npm start` behind Nginx with HTTPS. Use pm2 or systemd to keep it running.
+   - In the Nginx `location` that proxies to Node, set `proxy_set_header X-Real-IP $remote_addr;`. The rate limiter keys on that header; without it, it falls back to the last `X-Forwarded-For` hop.
    - The rate limiter is in memory per process. If you run several instances, move it to a shared store such as Redis.
 
 ## Editing content

@@ -21,15 +21,29 @@ function originAllowed(req: NextRequest) {
   }
 }
 
+// The client's IP as seen by our own proxy. Nginx sets X-Real-IP to $remote_addr, which the
+// visitor cannot forge. The first X-Forwarded-For entry is whatever the visitor sent, so a bot
+// could rotate it to dodge the rate limit; when only X-Forwarded-For exists, use the last hop,
+// which is the one our proxy appended.
+function clientIp(req: NextRequest) {
+  const real = req.headers.get('x-real-ip')?.trim();
+  if (real) return real;
+  const hops = (req.headers.get('x-forwarded-for') || '').split(',').map(s => s.trim()).filter(Boolean);
+  return hops[hops.length - 1] || 'unknown';
+}
+
+const MAX_BODY = 10_000;
+
 export async function POST(req: NextRequest) {
   if (!originAllowed(req)) return json({ ok: false, error: 'Forbidden' }, 403);
 
-  const ip = (req.headers.get('x-forwarded-for') || '').split(',')[0].trim() || req.headers.get('x-real-ip') || 'unknown';
-  const rl = rateLimit(`reg:${ip}`);
+  const rl = rateLimit(`reg:${clientIp(req)}`);
   if (!rl.ok) return json({ ok: false, error: 'Too many attempts. Please try again in a few minutes.' }, 429, { 'Retry-After': String(rl.retryAfter) });
 
+  // Refuse oversized bodies before reading them into memory.
+  if (Number(req.headers.get('content-length') || 0) > MAX_BODY) return json({ ok: false, error: 'Too large' }, 413);
   const raw = await req.text();
-  if (raw.length > 10_000) return json({ ok: false, error: 'Too large' }, 413);
+  if (raw.length > MAX_BODY) return json({ ok: false, error: 'Too large' }, 413);
   let body: unknown;
   try {
     body = JSON.parse(raw);

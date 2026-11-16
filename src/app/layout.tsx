@@ -12,9 +12,9 @@ const SITE = 'https://samridhi.si';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
-  title: 'Samridhi.si: free digital skills and support training',
+  title: 'Samridhi.si: Samridhi tabhi sachchi hai, jab woh sabki ho',
   description:
-    'Free, hands-on training for anyone, at any age: phones and the internet, computers, and support tracks in broadband, help desk and IT. A CSR initiative of FAB5.',
+    'Samridhi brings knowledge, technology and opportunity to the people and places that have been left out. A CSR initiative of FAB5, launching soon.',
   authors: [{ name: `${agency.name}, ${agency.legalName}`, url: agency.url }],
   creator: agency.name,
   publisher: org.name,
@@ -23,9 +23,9 @@ export const metadata: Metadata = {
     type: 'website',
     url: SITE,
     siteName: 'Samridhi.si',
-    title: 'Become the one your village calls when tech stops working',
-    description: 'Free training in digital skills and support work, close to home. A CSR initiative of FAB5.',
-    images: [{ url: '/images/class-kalkeri.webp', width: 1200, height: 1500, alt: 'A Samridhi class in Kalkeri' }],
+    title: 'Samridhi tabhi sachchi hai, jab woh sabki ho',
+    description: 'Because progress means more when we grow together. A CSR initiative of FAB5, launching soon.',
+    images: [{ url: '/images/v2/schoolgirls-laptop.webp', width: 1200, height: 779, alt: 'Two schoolgirls sharing a laptop' }],
     locale: 'en_IN'
   }
 };
@@ -34,7 +34,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#F6F3F5'
+  themeColor: '#FFFFFF'
 };
 
 const jsonLd = {
