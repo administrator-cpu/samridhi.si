@@ -22,7 +22,8 @@ const wrap = (i: number) => (i + n) % n;
 export function ProgrammeCards() {
   const active = useSlide();
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,200px),1fr))] gap-3.5">
+    // Flex-wrap with centred rows, so an odd card never sits alone on the left: 1, 2, 3 + 2, or all 5 per row.
+    <div className="flex flex-wrap justify-center gap-3.5">
       {programmes.map((p, i) => {
         const on = i === active;
         return (
@@ -34,12 +35,12 @@ export function ProgrammeCards() {
               pickSlide(i);
               document.getElementById('programmes')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className={`flex flex-col rounded-[20px] border-[1.5px] bg-white p-2 text-left text-plum transition-shadow ${
+            className={`flex w-full flex-col rounded-[20px] border-[1.5px] bg-white p-2 text-left text-plum transition-shadow sm:w-[calc(50%-7px)] md:w-[calc((100%-28px)/3)] xl:w-[calc((100%-56px)/5)] ${
               on ? 'border-green shadow-[0_14px_30px_rgba(21,128,61,0.18)]' : 'border-cream-line shadow-[0_1px_2px_rgba(43,27,48,0.05)] hover:border-green/50'
             }`}
           >
             <span className="relative block h-[150px] overflow-hidden rounded-[14px]">
-              <Image src={p.card.image} alt="" fill sizes="(max-width: 640px) 100vw, 260px" className="object-cover" />
+              <Image src={p.card.image} alt={p.card.alt} fill priority sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 300px" className="object-cover" />
               <span className="absolute bottom-2.5 left-2.5 max-w-[calc(100%-20px)] truncate rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold">{p.line}</span>
             </span>
             <span className="flex grow flex-col gap-1.5 px-2.5 pt-3.5 pb-2.5">
@@ -72,15 +73,15 @@ export function ProgrammeCarousel() {
     <div className="flex flex-col items-center gap-8">
       <div className="flex items-center justify-center gap-5 px-6" aria-live="polite">
         <div className="relative hidden h-[300px] w-[240px] overflow-hidden rounded-3xl grayscale lg:block">
-          <Image src={prev.slide.image} alt="" fill sizes="240px" className="object-cover" />
+          <Image src={prev.slide.image} alt="" fill sizes="480px" className="object-cover" />
         </div>
         <article className="relative w-[320px] max-w-full shrink-0 overflow-hidden rounded-[28px] bg-plum shadow-[0_24px_48px_rgba(43,27,48,0.18)]">
           <div className="relative h-[420px]">
-            <Image src={cur.slide.image} alt={cur.slide.alt} fill sizes="320px" className="object-cover" />
+            <Image src={cur.slide.image} alt={cur.slide.alt} fill sizes="680px" className="object-cover" />
           </div>
           <div className="absolute inset-x-0 top-0 flex flex-col gap-2.5 bg-gradient-to-b from-plum/85 to-plum/0 p-5">
             <span className="self-start rounded-full bg-magenta-deep px-2.5 py-1 text-[11px] font-bold text-white">{cur.name}</span>
-            <h3 className="m-0 text-2xl leading-tight font-bold text-white">{cur.title}</h3>
+            <h3 className="m-0 text-2xl leading-tight font-bold text-white">{cur.line}</h3>
           </div>
           <div className="absolute inset-x-3 bottom-3 flex flex-col gap-1 rounded-2xl bg-white px-4 py-3.5">
             <span className="text-sm font-bold text-plum">Launching soon · register your interest</span>
@@ -88,7 +89,7 @@ export function ProgrammeCarousel() {
           </div>
         </article>
         <div className="relative hidden h-[300px] w-[240px] overflow-hidden rounded-3xl grayscale lg:block">
-          <Image src={next.slide.image} alt="" fill sizes="240px" className="object-cover" />
+          <Image src={next.slide.image} alt="" fill sizes="480px" className="object-cover" />
         </div>
       </div>
       <div className="flex flex-wrap items-center justify-center gap-2.5 px-6">

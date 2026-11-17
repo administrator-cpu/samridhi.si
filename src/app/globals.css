@@ -45,6 +45,11 @@
   a {
     @apply text-green;
   }
+  /* Links inside running text are underlined, not just coloured (WCAG 1.4.1). */
+  :where(p, li) a {
+    text-decoration-line: underline;
+    text-underline-offset: 2px;
+  }
   ::selection {
     @apply bg-amber text-plum;
   }

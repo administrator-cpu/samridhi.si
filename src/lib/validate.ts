@@ -7,6 +7,7 @@ export type Registration = {
   village: string;
   district: string;
   programme: string;
+  consent: true;
 };
 
 const PROGRAMME_NAMES = programmes.map(p => p.name);
@@ -50,9 +51,13 @@ export function validateRegistration(body: unknown): ValidationResult {
   const programme = clean(b.programme, 60);
   if (programme && !PROGRAMME_NAMES.includes(programme)) errors.programme = 'Unknown programme.';
 
+  // Consent to be contacted (DPDP Act). JSON sends true; a plain form post sends "yes".
+  const consent = b.consent === true || ['yes', 'on', 'true'].includes(clean(b.consent, 10).toLowerCase());
+  if (!consent) errors.consent = 'Please agree so we can contact you.';
+
   // Honeypot: people never fill this hidden field.
   const isBot = clean(b.website, 200) !== '';
 
   if (Object.keys(errors).length) return { ok: false, errors };
-  return { ok: true, isBot, value: { role, name, phone, village, district, programme } };
+  return { ok: true, isBot, value: { role, name, phone, village, district, programme, consent: true } };
 }

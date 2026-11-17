@@ -44,16 +44,24 @@ export async function POST(req: NextRequest) {
   if (Number(req.headers.get('content-length') || 0) > MAX_BODY) return json({ ok: false, error: 'Too large' }, 413);
   const raw = await req.text();
   if (raw.length > MAX_BODY) return json({ ok: false, error: 'Too large' }, 413);
+
+  // A plain HTML form post (JavaScript off or failed) is answered with a redirect to a page,
+  // not JSON, so the visitor never lands on raw data.
+  const isFormPost = (req.headers.get('content-type') || '').includes('application/x-www-form-urlencoded');
+  const done = (status: 'ok' | 'invalid' | 'error', jsonBody: unknown, code: number) =>
+    // Relative Location, so it stays on the public domain even behind a proxy.
+    isFormPost ? new Response(null, { status: 303, headers: { Location: `/registered?status=${status}` } }) : json(jsonBody, code);
+
   let body: unknown;
   try {
-    body = JSON.parse(raw);
+    body = isFormPost ? Object.fromEntries(new URLSearchParams(raw)) : JSON.parse(raw);
   } catch {
     return json({ ok: false, error: 'Invalid JSON' }, 400);
   }
 
   const result = validateRegistration(body);
-  if (!result.ok) return json({ ok: false, errors: result.errors }, 422);
-  if (result.isBot) return json({ ok: true }, 201); // quietly drop spam
+  if (!result.ok) return done('invalid', { ok: false, errors: result.errors }, 422);
+  if (result.isBot) return done('ok', { ok: true }, 201); // quietly drop spam
 
   const key = (req.headers.get('idempotency-key') || '').slice(0, 100) || null;
   const now = new Date();
@@ -69,12 +77,13 @@ export async function POST(req: NextRequest) {
       source: 'samridhi.si',
       userAgent: (req.headers.get('user-agent') || '').slice(0, 300),
       createdAt: now,
+      consentAt: now,
       email: { status: 'pending' }
     }));
   } catch (err: unknown) {
-    if ((err as { code?: number })?.code === 11000 && key) return json({ ok: true, replayed: true });
+    if ((err as { code?: number })?.code === 11000 && key) return done('ok', { ok: true, replayed: true }, 200);
     console.error('[registrations] save failed', err);
-    return json({ ok: false, error: "Couldn't save. Please try again." }, 500);
+    return done('error', { ok: false, error: "Couldn't save. Please try again." }, 500);
   }
 
   // 2. Email the team.
@@ -102,5 +111,5 @@ export async function POST(req: NextRequest) {
     // Saved, so the learner still sees success. Find these with { "email.status": "failed" }.
   }
 
-  return json({ ok: true }, 201);
+  return done('ok', { ok: true }, 201);
 }

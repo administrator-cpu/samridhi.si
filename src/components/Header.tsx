@@ -19,10 +19,9 @@ export function Header() {
   // Highlight the section in view.
   useEffect(() => {
     const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && setActive(e.target.id)), { rootMargin: '-45% 0px -50% 0px' });
-    nav.forEach(l => {
-      const el = document.getElementById(l.id);
-      if (el) io.observe(el);
-    });
+    // Watch every section, not just the ones in the menu, so nothing stays lit
+    // on the hero, the stories band or the sign-up form.
+    document.querySelectorAll('main section[id]').forEach(el => io.observe(el));
     return () => io.disconnect();
   }, []);
 
@@ -42,7 +41,7 @@ export function Header() {
       <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md">
         <div aria-hidden className="brand-gradient h-[3px]" />
         <div className="mx-auto flex max-w-[1320px] items-center justify-between gap-6 px-6 py-3.5">
-          <a href="#top" aria-label="Samridhi.si home" className="text-plum no-underline">
+          <a href="#top" aria-label="Samridhi.si home" className="inline-flex min-h-11 items-center text-plum no-underline">
             <Wordmark className="text-2xl" />
           </a>
           <nav aria-label="Main" className="hidden items-center gap-7 lg:flex">
@@ -98,7 +97,7 @@ export function Header() {
               ×
             </button>
           </div>
-          {[...nav, { label: 'FAQ', id: 'faq' }].map(l => (
+          {nav.map(l => (
             <a
               key={l.id}
               href={`#${l.id}`}
