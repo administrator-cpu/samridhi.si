@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { preload } from 'react-dom';
 import { Aims } from '@/components/Aims';
 import { Header, Wordmark } from '@/components/Header';
 import { MobileBar } from '@/components/MobileBar';
@@ -35,12 +36,12 @@ function WifiPhoto() {
   );
 }
 
-function Circles({ items }: { items: { image: string; size: number }[] }) {
+function Circles({ items }: { items: { image: string; size: number; alt: string }[] }) {
   return (
-    <div aria-hidden className="flex flex-wrap items-center justify-center gap-5">
+    <div className="flex flex-wrap items-center justify-center gap-5">
       {items.map(c => (
         <span key={c.image} className="relative shrink-0 overflow-hidden rounded-full" style={{ width: c.size, height: c.size }}>
-          <Image src={c.image} alt="" fill sizes={`${c.size * 2}px`} className="object-cover" />
+          <Image src={c.image} alt={c.alt} fill sizes={`${Math.round(c.size * 1.6)}px`} className="object-cover" />
         </span>
       ))}
     </div>
@@ -54,6 +55,8 @@ const Arrow = () => (
 );
 
 export default function Home() {
+  // The Wi-Fi photo is the largest thing on first paint; fetch it straight away.
+  preload(hero.image, { as: 'image', fetchPriority: 'high' });
   return (
     <>
       <a href="#main" className="absolute -top-16 left-4 z-[60] rounded-[10px] bg-plum px-4 py-2.5 text-white no-underline focus:top-3 focus:text-white">
@@ -101,7 +104,7 @@ export default function Home() {
               <p className="m-0 max-w-[440px] text-body">
                 Sometimes all it takes is the right guidance, a new skill or access to technology to change someone&apos;s tomorrow. That is what Samridhi sets out to give.
               </p>
-              <a href="#programmes" className="font-bold">
+              <a href="#programmes" className="inline-flex min-h-11 items-center font-bold">
                 See our programmes →
               </a>
             </div>
@@ -111,25 +114,31 @@ export default function Home() {
 
         {/* Programmes */}
         <section id="programmes" aria-labelledby="prog-title" className="pb-[clamp(72px,10vw,120px)]">
-          <h2 id="prog-title" className="mx-auto mb-14 max-w-[640px] px-6 text-center text-[clamp(30px,3.2vw,42px)] leading-[1.15] font-bold tracking-[-0.03em] text-plum">
-            Different dreams. Different journeys. One shared future.
-          </h2>
+          <div className="mx-auto mb-14 flex max-w-[1240px] flex-wrap items-end justify-between gap-4 px-6">
+            <div className="flex max-w-[640px] flex-col gap-3">
+              <Pill>Our programmes</Pill>
+              <h2 id="prog-title" className="m-0 text-[clamp(30px,3.2vw,42px)] leading-[1.15] font-bold tracking-[-0.03em] text-plum">
+                Different dreams. Different journeys. One shared future.
+              </h2>
+            </div>
+            <p className="m-0 max-w-[380px] text-body">Five programmes, each for a different part of the community. Register your interest in any of them.</p>
+          </div>
           <ProgrammeCarousel />
         </section>
 
         {/* What we're working towards */}
-        <section aria-label="The change we're working towards" className="px-6 pb-[clamp(72px,10vw,120px)]">
+        <section id="stories" aria-label="The change we're working towards" className="px-6 pb-[clamp(72px,10vw,120px)]">
           <Aims />
         </section>
 
         {/* Our promise */}
         <section id="promise" aria-labelledby="promise-title" className="px-6 pb-[clamp(72px,10vw,120px)]">
-          <div className="relative mx-auto flex min-h-[480px] max-w-[1240px] flex-col justify-between gap-12 overflow-hidden rounded-[40px] bg-green p-[clamp(32px,4.5vw,60px)] text-white">
+          <div className="relative mx-auto flex max-w-[1240px] flex-col gap-12 overflow-hidden rounded-[40px] bg-green p-[clamp(32px,4.5vw,60px)] text-white">
             <span aria-hidden className="absolute -top-[260px] -right-[180px] h-[620px] w-[820px] rounded-full bg-green-mid" />
             <span aria-hidden className="absolute -right-[240px] -bottom-[320px] h-[640px] w-[560px] rounded-full bg-green-deep" />
-            <div className="relative flex flex-wrap justify-between gap-4">
+            <div className="relative grid grid-cols-[repeat(auto-fit,minmax(min(100%,380px),1fr))] items-center gap-10">
               <div className="flex max-w-[460px] flex-col gap-4.5">
-                <Pill className="bg-white/15">Our promise</Pill>
+                <Pill className="bg-green-deep">Our promise</Pill>
                 <h2 id="promise-title" className="m-0 text-[clamp(32px,3.6vw,46px)] leading-[1.1] font-bold tracking-[-0.03em] text-white">
                   We&apos;ll show our work from day one.
                 </h2>
@@ -137,17 +146,18 @@ export default function Home() {
                   Samridhi is just getting started. We don&apos;t believe in just giving; we believe in enabling, and in being open about how it goes.
                 </p>
               </div>
-              <Wordmark className="text-xl" dot="text-amber" />
-            </div>
-            <ol className="relative m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,240px),1fr))] gap-4 p-0">
+              <ol className="m-0 flex list-none flex-col gap-3 p-0">
               {promises.map((p, i) => (
-                <li key={p.title} className="flex flex-col gap-2 rounded-[20px] bg-white/12 p-6">
-                  <span className="font-mono text-[13px]">0{i + 1}</span>
-                  <strong className="text-xl font-bold">{p.title}</strong>
-                  <span className="text-[15px]">{p.desc}</span>
+                <li key={p.title} className="flex items-start gap-4 rounded-[20px] bg-green-deep/70 p-5">
+                  <span className="pt-1 font-mono text-[13px]">0{i + 1}</span>
+                  <span className="flex flex-col gap-1">
+                    <strong className="text-xl font-bold">{p.title}</strong>
+                    <span className="text-[15px]">{p.desc}</span>
+                  </span>
                 </li>
               ))}
-            </ol>
+              </ol>
+            </div>
           </div>
         </section>
 
@@ -167,7 +177,7 @@ export default function Home() {
               {involve.map(g => (
                 <RoleLink key={g.title} pick={{ role: g.role }} className="flex flex-col overflow-hidden rounded-3xl bg-cream text-plum no-underline hover:text-plum">
                   <span className="relative block h-60">
-                    <Image src={g.image} alt="" fill sizes="(max-width: 960px) 100vw, 400px" className="object-cover" />
+                    <Image src={g.image} alt={g.alt} fill sizes="(max-width: 960px) 100vw, 420px" className="object-cover" />
                   </span>
                   <span className="flex flex-col gap-2 p-6">
                     <span className="text-[22px] font-bold tracking-[-0.02em]">{g.title}</span>
@@ -184,10 +194,10 @@ export default function Home() {
         <section id="register" aria-labelledby="form-title" className="px-6 pb-[clamp(72px,10vw,120px)]">
           <div className="mx-auto grid max-w-[1240px] grid-cols-[repeat(auto-fit,minmax(min(100%,420px),1fr))] overflow-hidden rounded-[40px] border border-cream-line bg-white">
             <div className="relative flex min-h-[520px] flex-col justify-end p-[clamp(28px,4vw,48px)] text-white">
-              <Image src={registerImage.image} alt="" fill sizes="(max-width: 960px) 100vw, 620px" className="object-cover" />
+              <Image src={registerImage.image} alt={registerImage.alt} fill sizes="(max-width: 960px) 100vw, 960px" className="object-cover" />
               <span aria-hidden className="absolute inset-0 bg-gradient-to-b from-plum/0 from-30% to-plum/90" />
               <div className="relative flex flex-col gap-3">
-                <Pill className="bg-white/20">Be the first to know</Pill>
+                <Pill className="bg-plum/60">Be the first to know</Pill>
                 <h2 id="form-title" className="m-0 text-[clamp(30px,3.2vw,42px)] leading-[1.1] font-bold tracking-[-0.03em] text-white">
                   There&apos;s a place for you in Samridhi.
                 </h2>
@@ -203,11 +213,12 @@ export default function Home() {
         {/* FAQ */}
         <section id="faq" aria-labelledby="faq-title" className="px-6 pb-[clamp(72px,10vw,120px)]">
           <div className="mx-auto grid max-w-[1240px] grid-cols-[repeat(auto-fit,minmax(min(100%,380px),1fr))] gap-12">
-            <div className="flex flex-col justify-between gap-8">
+            <div className="flex flex-col gap-6 self-start lg:sticky lg:top-24">
               <h2 id="faq-title" className="m-0 text-[clamp(32px,3.4vw,44px)] leading-[1.1] font-bold tracking-[-0.03em] text-plum">
                 Frequently asked questions
               </h2>
-              <div className="flex items-start gap-3">
+              <p className="m-0 max-w-[420px] text-body">Samridhi is new, so here are the questions people ask most before it launches.</p>
+              <div className="flex items-start gap-3 rounded-2xl border border-line p-5">
                 <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden>
                   <path d="M3 11l18-8-8 18-2-8-8-2z" stroke="#E6007E" strokeWidth="2" fill="none" strokeLinejoin="round" />
                 </svg>
@@ -215,7 +226,9 @@ export default function Home() {
                   <strong>Still have a question?</strong>
                   <br />
                   <span className="text-body">Write to us at </span>
-                  <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                  <a href={`mailto:${contact.email}`} className="inline-flex min-h-11 items-center">
+                    {contact.email}
+                  </a>
                 </p>
               </div>
             </div>
@@ -257,41 +270,50 @@ export default function Home() {
         </div>
         <div className="relative mx-auto -mt-14 max-w-[1320px] overflow-hidden rounded-[40px] bg-cream px-[clamp(24px,4.5vw,56px)] pt-[clamp(32px,4.5vw,56px)]">
           <div className="flex flex-wrap gap-x-20 gap-y-10">
-            <nav aria-label="Explore" className="flex flex-col gap-2 text-[15px]">
-              <span className="font-mono text-xs text-body">Explore</span>
+            <nav aria-label="Explore" className="flex flex-col text-[15px]">
+              <span className="mb-1 font-mono text-xs text-body">Explore</span>
               {[
                 ['About Samridhi', '#about'],
                 ['Programmes', '#programmes'],
                 ['Our promise', '#promise'],
                 ['Volunteer', '#involved'],
-                ['Partner with us', '#involved']
+                ['Partner with us', '#involved'],
+                ['FAQ', '#faq']
               ].map(([l, h]) => (
-                <a key={l} href={h} className="text-plum no-underline hover:text-green">
+                <a key={l} href={h} className="inline-flex min-h-11 items-center text-plum no-underline hover:text-green">
                   {l}
                 </a>
               ))}
             </nav>
-            <div className="flex max-w-[360px] flex-col gap-2 text-[15px]">
-              <span className="font-mono text-xs text-body">Contact</span>
-              <a href={`mailto:${contact.email}`} className="text-plum no-underline hover:text-green">
+            <nav aria-label="Legal" className="flex flex-col text-[15px]">
+              <span className="mb-1 font-mono text-xs text-body">Legal</span>
+              <a href="/privacy" className="inline-flex min-h-11 items-center text-plum no-underline hover:text-green">
+                Privacy notice
+              </a>
+              <a href="/image-credits" className="inline-flex min-h-11 items-center text-plum no-underline hover:text-green">
+                Image credits
+              </a>
+            </nav>
+            <div className="flex max-w-[360px] flex-col text-[15px]">
+              <span className="mb-1 font-mono text-xs text-body">Contact</span>
+              <a href={`mailto:${contact.email}`} className="inline-flex min-h-11 items-center text-plum no-underline hover:text-green">
                 {contact.email}
               </a>
               <span className="text-sm text-body">
-                A CSR initiative of {org.name}, {org.address}.
+                Samridhi is a CSR initiative of FAB5 ({org.name}), {org.address}.
               </span>
             </div>
           </div>
-          <div className="mt-12 flex flex-wrap justify-between gap-2 text-[13px] text-body">
-            <span>© {new Date().getFullYear()} FAB5. All rights reserved. Photographs © their respective owners.</span>
-            <a
-              href={agency.url}
-              title="DIV builds, hosts and runs software for Indian businesses"
-              className="font-mono text-xs text-body no-underline hover:text-plum hover:underline hover:underline-offset-4"
-            >
-              Powered by &lt;Div/&gt;
+          <div className="mt-12 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-[13px] text-body">
+            <span>
+              © {new Date().getFullYear()} FAB5. Photos are illustrative; see <a href="/image-credits" className="underline underline-offset-2">image credits</a>.
+            </span>
+            {/* Descriptive credit, followed (no rel="nofollow"), pointing at DIV's case study for this site. */}
+            <a href={agency.creditUrl} className="inline-flex min-h-11 items-center text-body underline-offset-4 hover:text-plum hover:underline">
+              <span className="mr-1.5 font-mono text-xs">Powered by &lt;Div/&gt;</span>· {agency.creditText}
             </a>
           </div>
-          <p aria-hidden className="m-0 mt-4 text-[clamp(72px,16vw,250px)] leading-[0.78] whitespace-nowrap">
+          <p aria-hidden className="m-0 mt-2 pb-[clamp(16px,2vw,28px)] text-[clamp(64px,15vw,236px)] leading-[0.9] whitespace-nowrap">
             <Wordmark className="text-plum" />
           </p>
         </div>

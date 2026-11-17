@@ -18,7 +18,17 @@ export const org = {
 export const agency = {
   name: 'DIV',
   legalName: 'Development Innovation Vector Private Limited',
-  url: 'https://thediv.in/'
+  url: 'https://thediv.in/',
+  // The footer credit links here. Publish the case study on thediv.in before launch,
+  // or point this at 'https://thediv.in/' until it is live, so the credit never 404s.
+  creditUrl: 'https://thediv.in/case-studies/samridhi',
+  creditText: 'Website by DIV, a software development company in Noida'
+};
+
+export const site = {
+  url: 'https://samridhi.si',
+  name: 'Samridhi.si',
+  launched: false // true once programmes open; until then copy says "launching soon"
 };
 
 const img = (name: string) => `/images/v2/${name}.webp`;
@@ -33,7 +43,6 @@ export const programmes: {
   name: string;
   line: string;
   text: string;
-  title: string;
   card: { image: string; alt: string };
   slide: { image: string; alt: string };
 }[] = [
@@ -41,7 +50,6 @@ export const programmes: {
     name: 'Samridhi Beti',
     line: 'Her dreams. Her future.',
     text: 'Education, digital skills and confidence for girls to dream without limits.',
-    title: 'Her dreams. Her future.',
     card: { image: img('schoolgirls-laptop'), alt: 'Two schoolgirls sharing a laptop' },
     slide: { image: img('girls-class'), alt: 'Girls learning on computers with a teacher' }
   },
@@ -49,7 +57,6 @@ export const programmes: {
     name: 'Samridhi Senior',
     line: 'Age is no limit',
     text: 'Helping senior citizens use the digital world with confidence.',
-    title: 'Age should never limit opportunity',
     card: { image: img('senior-phone'), alt: 'A grandfather learning to use a phone with his granddaughter' },
     slide: { image: img('senior-couple'), alt: 'An older couple using a laptop together' }
   },
@@ -57,7 +64,6 @@ export const programmes: {
     name: 'Samridhi Gaon',
     line: 'Every village holds potential',
     text: 'Digital knowledge and new paths for rural communities.',
-    title: 'Every village holds potential',
     card: { image: img('gaon-laptop'), alt: 'A girl in a village using a laptop outdoors' },
     slide: { image: img('rural-lab'), alt: 'Children in a village computer lab' }
   },
@@ -65,7 +71,6 @@ export const programmes: {
     name: 'Samridhi Shakti',
     line: 'When women rise',
     text: 'Skills and confidence for women to work, earn and build businesses.',
-    title: 'When women rise, communities thrive',
     card: { image: img('block-printing'), alt: 'Women block-printing fabric together' },
     slide: { image: img('sewing-women'), alt: 'Two women working at a sewing machine' }
   },
@@ -73,22 +78,21 @@ export const programmes: {
     name: 'Samridhi Rozgar',
     line: 'Skills today, work tomorrow',
     text: 'Practical skills that prepare young people for a livelihood.',
-    title: 'Skills today. Work tomorrow.',
     card: { image: img('youth'), alt: 'A smiling young man giving a thumbs-up' },
     slide: { image: img('trainer-lab'), alt: 'A trainer helping a young student at a computer' }
   }
 ];
 
-export const about = {
+export const about: Record<'left' | 'right', { image: string; size: number; alt: string }[]> = {
   left: [
-    { image: img('beti-keyboard'), size: 96 },
-    { image: img('village-class'), size: 230 },
-    { image: img('women-laptop'), size: 140 }
+    { image: img('beti-keyboard'), size: 96, alt: 'A girl typing at a computer' },
+    { image: img('village-class'), size: 230, alt: 'Children smiling at their desks in a village classroom' },
+    { image: img('women-laptop'), size: 140, alt: 'Two women in a village using a laptop' }
   ],
   right: [
-    { image: img('women-computer'), size: 200 },
-    { image: img('student'), size: 130 },
-    { image: img('girl-smile'), size: 100 }
+    { image: img('women-computer'), size: 200, alt: 'Women learning computer skills together' },
+    { image: img('student'), size: 130, alt: 'A young woman student with a backpack' },
+    { image: img('girl-smile'), size: 100, alt: 'A girl smiling at her computer' }
   ]
 };
 
@@ -111,10 +115,10 @@ export const promises = [
 export const roles = ['Join a programme', 'Volunteer my time', 'Partner with Samridhi', 'Bring it to my village'] as const;
 export type Role = (typeof roles)[number];
 
-export const involve: { title: string; desc: string; cta: string; role: Role; image: string }[] = [
-  { title: 'Volunteer your time', desc: 'Teach a skill, mentor a learner or help at a centre near you.', cta: 'Volunteer with us', role: 'Volunteer my time', image: img('volunteer') },
-  { title: 'Partner with us', desc: 'NGOs, schools and companies can run programmes with Samridhi.', cta: 'Start a partnership', role: 'Partner with Samridhi', image: img('partners') },
-  { title: 'Bring Samridhi to your village', desc: 'Tell us about your community and what it needs most.', cta: 'Start a conversation', role: 'Bring it to my village', image: img('village-family') }
+export const involve: { title: string; desc: string; cta: string; role: Role; image: string; alt: string }[] = [
+  { title: 'Volunteer your time', desc: 'Teach a skill, mentor a learner or help at a centre near you.', cta: 'Volunteer with us', role: 'Volunteer my time', image: img('volunteer'), alt: 'A volunteer laughing with young children in a classroom' },
+  { title: 'Partner with us', desc: 'NGOs, schools and companies can run programmes with Samridhi.', cta: 'Start a partnership', role: 'Partner with Samridhi', image: img('partners'), alt: 'Partners shaking hands across a meeting table' },
+  { title: 'Bring Samridhi to your village', desc: 'Tell us about your community and what it needs most.', cta: 'Start a conversation', role: 'Bring it to my village', image: img('village-family'), alt: 'A village family gathered round a laptop' }
 ];
 
 export const registerImage = { image: img('women-laptop'), alt: 'Two women in a village using a laptop together' };
@@ -125,7 +129,7 @@ export const faqs = [
   { q: 'How do I volunteer?', a: 'Use the form on this page, choose “Volunteer my time”, and tell us where you are. The team will match you with a programme.' },
   { q: 'Can my organisation partner with Samridhi?', a: 'Yes. NGOs, schools and institutions can write to us. We explain how partners are chosen and what we bring.' },
   { q: 'When does Samridhi launch?', a: 'Very soon. Leave your details in the form and you will be the first to hear when programmes open.' },
-  { q: 'Is my information safe?', a: 'We use your details only to tell you about Samridhi, and never share them for marketing.' },
+  { q: 'Is my information safe?', a: 'We use your details only to tell you about Samridhi, never share them for marketing, and delete them on request. Our privacy notice has the details.' },
   { q: 'Why does FAB5 run Samridhi?', a: 'At FAB5 we believe the value of technology lies in what people can achieve with it. Samridhi is how we act on that belief.' }
 ];
 
@@ -133,7 +137,34 @@ export const nav = [
   { label: 'About', id: 'about' },
   { label: 'Programmes', id: 'programmes' },
   { label: 'Our promise', id: 'promise' },
-  { label: 'Get involved', id: 'involved' }
+  { label: 'Get involved', id: 'involved' },
+  { label: 'FAQ', id: 'faq' }
 ];
+
+// Image credits page. Fill in "source" for each photo (photographer, stock library or AI tool);
+// until then the page lists it as an illustrative image.
+export const credits: { file: string; description: string; source: string }[] = [
+  ['schoolgirls-laptop', 'Two schoolgirls sharing a laptop (hero)'],
+  ['girls-class', 'Girls learning on computers with a teacher'],
+  ['senior-phone', 'A grandfather learning to use a phone'],
+  ['senior-couple', 'An older couple using a laptop'],
+  ['gaon-laptop', 'A girl in a village using a laptop'],
+  ['rural-lab', 'Children in a village computer lab'],
+  ['block-printing', 'Women block-printing fabric'],
+  ['sewing-women', 'Two women at a sewing machine'],
+  ['youth', 'A young man giving a thumbs-up'],
+  ['trainer-lab', 'A trainer helping a student at a computer'],
+  ['girls-lab', 'Young women gathered round a computer trainer'],
+  ['women-lab', 'Women learning in a computer lab'],
+  ['women-computer', 'Women learning computer skills together'],
+  ['women-laptop', 'Two women in a village using a laptop'],
+  ['village-class', 'Children in a village classroom'],
+  ['village-family', 'A village family gathered round a laptop'],
+  ['beti-keyboard', 'A girl typing at a computer'],
+  ['student', 'A young woman student'],
+  ['girl-smile', 'A girl smiling at her computer'],
+  ['volunteer', 'A volunteer with young children'],
+  ['partners', 'Partners at a meeting table']
+].map(([file, description]) => ({ file: img(file), description, source: '' }));
 
 export const pretty10 = (n: string) => (n ? `+91 ${n.slice(0, 5)} ${n.slice(5)}` : '');

@@ -31,6 +31,13 @@ Requires Node 20+. Fonts are self-hosted from npm (`@fontsource`), so nothing lo
    - In the Nginx `location` that proxies to Node, set `proxy_set_header X-Real-IP $remote_addr;`. The rate limiter keys on that header; without it, it falls back to the last `X-Forwarded-For` hop.
    - The rate limiter is in memory per process. If you run several instances, move it to a shared store such as Redis.
 
+## Before launch: content and SEO
+
+- **DIV credit:** the footer links to `agency.creditUrl` in `src/content/site.ts` (`https://thediv.in/case-studies/samridhi`). Publish that case study first, or point the setting at `https://thediv.in/` until it is live. The link is a normal followed link; keep it that way.
+- **Image credits:** fill in `source` for each photo in `credits` (`site.ts`). Until then `/image-credits` lists them as illustrative.
+- **Privacy notice:** `/privacy` is written for the DPDP Act, 2023. Have FAB5's legal team review it. The form needs a consent tick, and the API refuses sign-ups without one.
+- **Search engines:** `robots.txt`, `sitemap.xml`, the web manifest, icons and the JPG share image (`public/og.jpg`) are built in. Any `*.vercel.app` host gets an `X-Robots-Tag: noindex` header from `src/middleware.ts`, so only samridhi.si is indexed.
+
 ## Editing content
 
 Everything on the page lives in **`src/content/site.ts`**.

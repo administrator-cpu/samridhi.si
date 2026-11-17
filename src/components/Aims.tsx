@@ -13,11 +13,11 @@ export function Aims() {
   return (
     <div className="mx-auto grid max-w-[1240px] grid-cols-[repeat(auto-fit,minmax(min(100%,420px),1fr))] overflow-hidden rounded-[40px] bg-magenta-deep text-white">
       <div className="flex flex-col justify-center gap-6 p-[clamp(32px,5vw,72px)]">
-        <span className="self-start rounded-full bg-white/20 px-3 py-1.5 text-xs font-semibold">The change we&apos;re working towards</span>
+        <span className="self-start rounded-full bg-plum/30 px-3 py-1.5 text-xs font-semibold">The change we&apos;re working towards</span>
         <h2 className="m-0 text-[clamp(30px,3.4vw,46px)] leading-[1.1] font-bold tracking-[-0.03em] text-white">The stories we&apos;re here to write.</h2>
         <div aria-live="polite" className="flex flex-col gap-3">
           <p className="m-0 text-[clamp(19px,1.6vw,22px)] leading-[1.45] font-semibold">{a.text}</p>
-          <p className="m-0 text-sm opacity-90">The change {a.programme} is working towards</p>
+          <p className="m-0 text-sm font-semibold">{a.programme}</p>
         </div>
         <div className="flex items-center gap-3 pt-2">
           <button
@@ -41,7 +41,7 @@ export function Aims() {
         </div>
       </div>
       <figure className="relative m-0 min-h-[460px]">
-        <Image src={a.image} alt={a.alt} fill sizes="(max-width: 960px) 100vw, 620px" className="object-cover" />
+        <Image src={a.image} alt={a.alt} fill sizes="(max-width: 960px) 100vw, 960px" className="object-cover" />
         <figcaption className="absolute bottom-5 left-5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-plum">{a.programme} · illustrative photo</figcaption>
       </figure>
     </div>
